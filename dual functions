@@ -1,0 +1,39 @@
+function Get-MemList {
+<#
+.SYNOPSIS
+Creates an in-memory list of AD computer objects for parsing
+.DESCRIPTION
+Creates an in-memory list of AD computer objects for parsing
+.PARAMETER SearchBase
+Defaults to the basic one
+.EXAMPLE
+$mem = Get-MemList
+#>
+    param (
+        [string]$SearchBase = $DefaultOU
+    )
+    Get-ADComputer -Filter * -SearchBase $SearchBase -Property *
+}
+
+function Search-MemList {
+<#
+.SYNOPSIS
+Searches an in-memory list of AD computer objects for a specific computer name.
+.DESCRIPTION
+Filters a previously retrieved in-memory list of AD computer objects (e.g., from Get-MemList)
+based on an exact computer name match. This avoids re-querying Active Directory.
+.PARAMETER MemList
+The list of AD computer objects (already pulled into memory).
+.PARAMETER ComputerName
+The computer name to search for (exact match).
+.EXAMPLE
+$mem = Get-MemList
+Search-MemList -MemList $mem -ComputerName "XXX"
+This example loads the AD computers into memory, then searches for the computer named "XXX".
+#>
+    param (
+        [array]$MemList,
+        [string]$ComputerName
+    )
+    $MemList | Where-Object { $_.Name -eq $ComputerName }
+}
