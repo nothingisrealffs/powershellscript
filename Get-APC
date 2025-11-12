@@ -1,0 +1,19 @@
+function Get-APC {
+<#
+.SYNOPSIS
+Searches through the active Active Directory for a specific computer
+.DESCRIPTION
+Uses the Active Directory in order to find a computer and display all the information about it.
+.PARAMETER SearchBase
+Defaults to the basic one
+.PARAMETER ComputerName
+The XXX tag of the computer that you're looking for with "" around it.
+.EXAMPLE
+Get-AIUPC -ComputerName "123"
+Searches for a computer named "123" in the default OU.
+.EXAMPLE
+Get-AIUPC -SearchBase "OU=IT,DC=contoso,DC=com" -ComputerName "456"
+#>
+   param ([string]$SearchBase = $DefaultIUOU,[string]$ComputerName)
+   Get-ADComputer -Filter * -SearchBase $SearchBase -Property * | Where-Object {$_.Name -eq $ComputerName}
+}
