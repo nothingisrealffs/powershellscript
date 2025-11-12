@@ -1,0 +1,12 @@
+function Whoops {
+<#
+.SYNOPSIS
+Displays all custom functions in my profile
+.DESCRIPTION
+Displays all custom functions in my profile
+.EXAMPLE
+Whoops
+#>
+   Get-Command -CommandType Function |
+       Where-Object {$_.ScriptBlock.File -eq $PROFILE} | Select-Object Name, @{Name="DefinedIn";Expression={$_.ScriptBlock.File}} | ForEach-Object {Get-Help $_.Name | Select-Object Name, Synopsis}
+}
